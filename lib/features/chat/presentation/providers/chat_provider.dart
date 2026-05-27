@@ -42,9 +42,9 @@ class ChatProvider extends ChangeNotifier {
 
     try {
 
-      /// BETTER GIF SEARCH KEYWORD
+      /// SMARTER GIF KEYWORDS
       final keyword =
-          _extractKeyword(text);
+          getGifKeyword(text);
 
       /// NATURAL BOT REPLY
       final botReply =
@@ -83,13 +83,12 @@ class ChatProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// NATURAL AI RESPONSE
+  /// SMART HUMAN-LIKE RESPONSES
   Future<String> getBotResponse(
     String query,
   ) async {
 
-    final lower =
-        query.toLowerCase();
+    final lower = query.toLowerCase();
 
     String response;
 
@@ -99,70 +98,164 @@ class ChatProvider extends ChangeNotifier {
         lower.contains('hey')) {
 
       response =
-          'Hey 👋 Nice to chat with you!';
-
+          'Hey 👋 how are you?';
     }
 
-    /// HUNGRY / FOOD
-    else if (lower.contains('hungry') ||
-        lower.contains('food') ||
-        lower.contains('eat') ||
-        lower.contains('dinner') ||
-        lower.contains('lunch')) {
+    /// HOW ARE YOU
+    else if (lower.contains('how are you')) {
 
       response =
-          'Food sounds amazing right now 🍔';
+          'I’m doing pretty good 😄';
+    }
 
+    /// WHERE QUESTIONS
+    else if (lower.contains('where')) {
+
+      if (lower.contains('dog')) {
+
+        response =
+            'Probably running around somewhere 🐶';
+
+      } else if (lower.contains('dad')) {
+
+        response =
+            'Maybe he went to grab milk 😂';
+
+      } else if (lower.contains('mom')) {
+
+        response =
+            'Probably busy doing mom things 😅';
+
+      } else if (lower.contains('you going')) {
+
+        response =
+            'Not sure yet 😎 maybe somewhere fun.';
+
+      } else {
+
+        response =
+            'Honestly I have no idea 😂';
+      }
+    }
+
+    /// WHAT QUESTIONS
+    else if (lower.contains('what')) {
+
+      if (lower.contains('time')) {
+
+        response =
+            'Time goes way too fast 😭';
+
+      } else if (lower.contains('dinner')) {
+
+        response =
+            'Hopefully something good 🍕';
+
+      } else if (lower.contains('doing')) {
+
+        response =
+            'Just chilling here 😎';
+
+      } else {
+
+        response =
+            'That’s a good question honestly 👀';
+      }
+    }
+
+    /// ARE YOU QUESTIONS
+    else if (lower.contains('are you')) {
+
+      if (lower.contains('thirsty')) {
+
+        response =
+            'A little 😅 I could use a drink.';
+
+      } else if (lower.contains('hungry')) {
+
+        response =
+            'Honestly yes 🍔';
+
+      } else if (lower.contains('tired')) {
+
+        response =
+            'A tiny bit 😴';
+
+      } else {
+
+        response =
+            'Maybe 😂';
+      }
+    }
+
+    /// WHY QUESTIONS
+    else if (lower.contains('why')) {
+
+      response =
+          'Honestly… that’s a mystery 😂';
     }
 
     /// LOVE
     else if (lower.contains('love')) {
 
       response =
-          'That’s actually really sweet ❤️';
-
+          'That’s honestly sweet ❤️';
     }
 
     /// SAD
-    else if (lower.contains('sad') ||
-        lower.contains('cry')) {
+    else if (lower.contains('sad')) {
 
       response =
-          'Aww 🥺 Hope this makes you feel better.';
-
-    }
-
-    /// ANGRY
-    else if (lower.contains('angry') ||
-        lower.contains('mad')) {
-
-      response =
-          'Okay okay 😅 let’s calm down a little.';
-
+          'Hope this cheers you up 😢';
     }
 
     /// FUNNY
-    else if (lower.contains('funny') ||
-        lower.contains('lol')) {
+    else if (lower.contains('funny')) {
 
       response =
-          '😂 This one fits perfectly.';
+          'Okay this is hilarious 😂';
+    }
 
+    /// BYE
+    else if (lower.contains('bye')) {
+
+      response =
+          'See you later 👋';
     }
 
     /// DEFAULT
     else {
 
-      response =
-          'This GIF totally matches what you said 😄';
+      final replies = [
+
+        'That’s actually interesting 😄',
+
+        'I kinda like that.',
+
+        'Not gonna lie… that’s funny 😂',
+
+        'I totally get what you mean.',
+
+        'That sounds fun 😎',
+
+        'Honestly that’s a vibe.',
+
+        'Hmm maybe 👀',
+
+        'Could be honestly 😂',
+      ];
+
+      replies.shuffle();
+
+      response = replies.first;
     }
 
     final translation =
         await translator.translate(
       response,
       to: query.contains(
-        RegExp(r'[áéíóúñ]'),
-      )
+            RegExp(r'[áéíóúñ¿]'),
+          )
           ? 'es'
           : 'en',
     );
@@ -170,59 +263,72 @@ class ChatProvider extends ChangeNotifier {
     return translation.text;
   }
 
-  /// SMART GIF SEARCH
-  String _extractKeyword(
+  /// SMART GIF MATCHING
+  String getGifKeyword(
     String text,
   ) {
 
-    final lower =
-        text.toLowerCase();
+    final lower = text.toLowerCase();
 
-    /// FOOD
-    if (lower.contains('hungry') ||
-        lower.contains('food') ||
-        lower.contains('eat') ||
-        lower.contains('dinner')) {
+    /// QUESTIONS
+    if (lower.contains('?')) {
 
-      return 'hungry food meme';
+      if (lower.contains('thirsty')) {
+        return 'drinking meme';
+      }
+
+      if (lower.contains('dinner') ||
+          lower.contains('food')) {
+        return 'funny food reaction';
+      }
+
+      if (lower.contains('where')) {
+        return 'confused reaction';
+      }
+
+      if (lower.contains('time')) {
+        return 'waiting meme';
+      }
+
+      if (lower.contains('how')) {
+        return 'happy reaction';
+      }
+
+      return 'funny reaction';
     }
 
-    /// LOVE
-    if (lower.contains('love')) {
-
-      return 'cute love';
-    }
-
-    /// SAD
-    if (lower.contains('sad') ||
-        lower.contains('cry')) {
-
-      return 'sad reaction';
-    }
-
-    /// ANGRY
-    if (lower.contains('angry') ||
-        lower.contains('mad')) {
-
-      return 'angry meme';
-    }
-
-    /// HELLO
+    /// NORMAL TOPICS
     if (lower.contains('hello') ||
-        lower.contains('hi') ||
-        lower.contains('hey')) {
+        lower.contains('hi')) {
 
       return 'hello reaction';
     }
 
-    /// FUNNY
-    if (lower.contains('funny') ||
-        lower.contains('lol')) {
+    if (lower.contains('love')) {
+
+      return 'cute love gif';
+    }
+
+    if (lower.contains('sad')) {
+
+      return 'sad crying reaction';
+    }
+
+    if (lower.contains('funny')) {
 
       return 'funny meme';
     }
 
-    /// DEFAULT
-    return '$text meme';
+    if (lower.contains('angry')) {
+
+      return 'angry reaction meme';
+    }
+
+    if (lower.contains('bye')) {
+
+      return 'goodbye meme';
+    }
+
+    return 'reaction meme';
   }
 }
