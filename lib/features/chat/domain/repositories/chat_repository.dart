@@ -1,5 +1,9 @@
 import '../entities/chat_message.dart';
 
 abstract class ChatRepository {
-  Future<List<ChatMessage>> searchGif(String query);
+
+  /// SEARCH GIFS
+  Future<List<ChatMessage>> searchGif(
+    String query,
+  );
 }
